@@ -10,6 +10,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// var SECRET_KEY = []byte("supersecretkey")
+
 func AuthMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if err := godotenv.Load(); err != nil {
@@ -32,7 +34,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		tokenString := strings.Split(authHeader, " ")[1]
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return os.Getenv("SECRET_KEY"), nil
+			return []byte(os.Getenv("SECRET_KEY")), nil
+			// return SECRET_KEY, nil
 		})
 		if err != nil || !token.Valid {
 			ctx.JSON(http.StatusBadRequest, gin.H{

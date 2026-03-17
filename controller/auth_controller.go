@@ -29,12 +29,7 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		})
 		return
 	}
-	if err := config.DB.Model(&model.User{}).Where("id = ?", user.ID).First(&foundUser); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": err,
-		})
-		return
-	}
+	config.DB.Model(&model.User{}).Where("id = ?", user.ID).First(&foundUser)
 	if err := bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(user.Password)); err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid Password",

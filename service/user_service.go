@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/sidz111/user-auth/model"
 	"github.com/sidz111/user-auth/repository"
 	"golang.org/x/crypto/bcrypt"
@@ -21,7 +22,7 @@ type userService struct {
 	repo repository.UserRepository
 }
 
-func NewUserRepository(repo repository.UserRepository) UserService {
+func NewUserService(repo repository.UserRepository) UserService {
 	return &userService{repo: repo}
 }
 
@@ -30,6 +31,7 @@ func (s *userService) CreateUser(ctx context.Context, user *model.User) error {
 	if err != nil {
 		return err
 	}
+	user.UUID = uuid.NewString()
 	user.Password = string(hashedPass)
 	return s.repo.CreateUser(ctx, user)
 }

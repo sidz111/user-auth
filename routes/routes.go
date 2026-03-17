@@ -6,8 +6,9 @@ import (
 	"github.com/sidz111/user-auth/middleware"
 )
 
-func SetRoutes(usersController *controller.UserController, router *gin.Engine) *gin.Engine {
+func SetRoutes(usersController *controller.UserController, authController *controller.AuthController, router *gin.Engine) *gin.Engine {
 	user := router.Group("users")
+	router.POST("/login", authController.Login)
 	{
 		user.POST("/", usersController.CreateUser)
 		user.GET("/:id", middleware.AuthMiddleware(), usersController.GetUser)
